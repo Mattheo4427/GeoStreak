@@ -1,89 +1,78 @@
-const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
+document.addEventListener('DOMContentLoaded', async () => {
+  if (
+    typeof loadData !== 'function' ||
+    typeof loadTexts !== 'function' ||
+    typeof loadDepartements !== 'function' ||
+    typeof loadRegions !== 'function' ||
+    typeof applyTexts !== 'function'
+  ) {
+    return;
+  }
 
-if (isIndexPage) {
-  document.addEventListener('DOMContentLoaded', () => {
-    const playButton = document.getElementById('playButton');
-    const playButton2 = document.getElementById('playButton2');
-    const playButtonDept = document.getElementById('playButtonDept');
-    const playButtonDeptMap = document.getElementById('playButtonDeptMap');
-    const playButtonRegion = document.getElementById('playButtonRegion');
-
-    if (playButton) playButton.addEventListener('click', flagGame);
-    if (playButton2) playButton2.addEventListener('click', mapGame);
-    if (playButtonDept) playButtonDept.addEventListener('click', deptGame);
-    if (playButtonDeptMap) playButtonDeptMap.addEventListener('click', deptMapGame);
-    if (playButtonRegion) playButtonRegion.addEventListener('click', regionGame);
-
-    const bordersBtn = document.getElementById('borders');
-    if (bordersBtn) {
-      bordersBtn.classList.add('easy');
-      bordersBtn.addEventListener('click', changeDifficulty);
+  try {
+    await Promise.all([loadData(currentLang), loadTexts(currentLang), loadDepartements(), loadRegions()]);
+    applyTexts();
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === currentLang);
+    });
+    if (typeof updateModeButtonTexts === 'function') {
+      updateModeButtonTexts();
     }
-
-    const bordersDeptMapBtn = document.getElementById('bordersDeptMap');
-    if (bordersDeptMapBtn) {
-      bordersDeptMapBtn.classList.add('easy');
-      bordersDeptMapBtn.addEventListener('click', () => changeDifficultyFor('bordersDeptMap'));
-    }
-
-    const modeFlagGame = document.getElementById('modeFlagGame');
-    const modeMapGame = document.getElementById('modeMapGame');
-    if (modeFlagGame) {
-      modeFlagGame.classList.add('countries');
-      modeFlagGame.addEventListener('click', () => changeMode(modeFlagGame));
-    }
-    if (modeMapGame) {
-      modeMapGame.classList.add('countries');
-      modeMapGame.addEventListener('click', () => changeMode(modeMapGame));
-    }
-
-    const modeDeptGameBtn = document.getElementById('modeDeptGame');
-    if (modeDeptGameBtn) {
-      modeDeptGameBtn.classList.add('deptName');
-      modeDeptGameBtn.addEventListener('click', () => changeModeDept(modeDeptGameBtn));
-    }
-
-    const modeDeptMapGameBtn = document.getElementById('modeDeptMapGame');
-    if (modeDeptMapGameBtn) {
-      modeDeptMapGameBtn.classList.add('deptName');
-      modeDeptMapGameBtn.addEventListener('click', () => changeModeDept(modeDeptMapGameBtn));
-    }
-  });
-}
+  } catch (error) {
+    console.warn('GeoStreak i18n initialization failed:', error);
+  }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-  const brandLinks = Array.from(document.querySelectorAll('.navbar .flex-1 a[href$="index.html"]'));
-  const brandContainer = document.querySelector('.navbar .flex-1');
+  const playButton = document.getElementById('playButton');
+  const playButton2 = document.getElementById('playButton2');
+  const playButtonDept = document.getElementById('playButtonDept');
+  const playButtonDeptMap = document.getElementById('playButtonDeptMap');
+  const playButtonRegion = document.getElementById('playButtonRegion');
 
-  brandLinks.forEach(link => {
-    link.addEventListener('click', (event) => {
-      // Preserve native browser behaviors like opening in a new tab/window.
-      if (
-        event.defaultPrevented ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey ||
-        link.target === '_blank'
-      ) {
-        return;
-      }
+  if (playButton) playButton.addEventListener('click', flagGame);
+  if (playButton2) playButton2.addEventListener('click', mapGame);
+  if (playButtonDept) playButtonDept.addEventListener('click', deptGame);
+  if (playButtonDeptMap) playButtonDeptMap.addEventListener('click', deptMapGame);
+  if (playButtonRegion) playButtonRegion.addEventListener('click', regionGame);
 
-      event.preventDefault();
-      if (brandContainer) {
-        brandContainer.classList.remove('brand-click-animate');
-        globalThis.setTimeout(() => {
-          brandContainer.classList.add('brand-click-animate');
-        }, 0);
-      }
+  const bordersBtn = document.getElementById('borders');
+  if (bordersBtn) {
+    bordersBtn.classList.add('easy');
+    bordersBtn.addEventListener('click', changeDifficulty);
+  }
 
-      globalThis.setTimeout(() => {
-        globalThis.location.href = link.getAttribute('href') || 'index.html';
-      }, 220);
-    });
-  });
+  const bordersDeptMapBtn = document.getElementById('bordersDeptMap');
+  if (bordersDeptMapBtn) {
+    bordersDeptMapBtn.classList.add('easy');
+    bordersDeptMapBtn.addEventListener('click', () => changeDifficultyFor('bordersDeptMap'));
+  }
 
+  const modeFlagGame = document.getElementById('modeFlagGame');
+  const modeMapGame = document.getElementById('modeMapGame');
+  if (modeFlagGame) {
+    modeFlagGame.classList.add('countries');
+    modeFlagGame.addEventListener('click', () => changeMode(modeFlagGame));
+  }
+  if (modeMapGame) {
+    modeMapGame.classList.add('countries');
+    modeMapGame.addEventListener('click', () => changeMode(modeMapGame));
+  }
+
+  const modeDeptGameBtn = document.getElementById('modeDeptGame');
+  if (modeDeptGameBtn) {
+    modeDeptGameBtn.classList.add('deptName');
+    modeDeptGameBtn.addEventListener('click', () => changeModeDept(modeDeptGameBtn));
+  }
+
+  const modeDeptMapGameBtn = document.getElementById('modeDeptMapGame');
+  if (modeDeptMapGameBtn) {
+    modeDeptMapGameBtn.classList.add('deptName');
+    modeDeptMapGameBtn.addEventListener('click', () => changeModeDept(modeDeptMapGameBtn));
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
   const dropdowns = [
     { optionClass: '.mapOptionFlagGame', titleId: 'zoneFlag', detailsId: 'zoneFlagGame' },
     { optionClass: '.mapOptionMapGame', titleId: 'zoneMap', detailsId: 'zoneMapGame' }
@@ -181,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!window.location.pathname.includes('apprendre')) return;
+  if (!globalThis.location.pathname.includes('apprendre')) return;
 
   await Promise.all([loadData(currentLang), loadTexts(currentLang), loadDepartements(), loadRegions()]);
   applyTexts();
@@ -238,13 +227,3 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 });
 
-if (isIndexPage) {
-  (async () => {
-    await Promise.all([loadData(currentLang), loadTexts(currentLang), loadDepartements(), loadRegions()]);
-    applyTexts();
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.lang === currentLang);
-    });
-    updateModeButtonTexts();
-  })();
-}

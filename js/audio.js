@@ -2,6 +2,7 @@
   const basePath = globalThis.location.pathname.includes('/pages/') ? '../sounds/' : 'sounds/';
   const SFX_MUTE_STORAGE_KEY = 'geostreak-muted';
   const MUSIC_MUTE_STORAGE_KEY = 'geostreak-music-muted';
+  const MUSIC_TIME_STORAGE_KEY = 'geostreak-music-time';
   const audioFiles = {
     success: basePath + 'success.m4a',
     error: basePath + 'error.mp3',
@@ -14,6 +15,50 @@
   let isMusicMuted = localStorage.getItem(MUSIC_MUTE_STORAGE_KEY) === '1';
   let backgroundMusic = null;
   let musicRetryArmed = false;
+  let lastUiSoundAt = 0;
+  let hasRestoredMusicTime = false;
+  let lastPointerSoundAt = 0;
+
+  function getSavedMusicTime() {
+    const raw = sessionStorage.getItem(MUSIC_TIME_STORAGE_KEY);
+    const parsed = Number.parseFloat(raw || '0');
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+  }
+
+  function saveMusicTime() {
+    if (!backgroundMusic) return;
+    if (!Number.isFinite(backgroundMusic.currentTime)) return;
+    sessionStorage.setItem(MUSIC_TIME_STORAGE_KEY, String(backgroundMusic.currentTime));
+  }
+
+  function restoreMusicTimeIfNeeded() {
+    if (hasRestoredMusicTime) return;
+    const music = getBackgroundMusic();
+    const savedTime = getSavedMusicTime();
+    hasRestoredMusicTime = true;
+    if (!savedTime) return;
+
+    const applySavedTime = () => {
+      try {
+        if (!Number.isFinite(savedTime) || savedTime <= 0) return;
+        if (Number.isFinite(music.duration) && music.duration > 0) {
+          music.currentTime = Math.min(savedTime, Math.max(music.duration - 0.1, 0));
+        } else {
+          music.currentTime = savedTime;
+        }
+      } catch (error) {
+        console.warn('Could not restore music time, resetting position:', error);
+        sessionStorage.removeItem(MUSIC_TIME_STORAGE_KEY);
+      }
+    };
+
+    if (music.readyState >= 1) {
+      applySavedTime();
+      return;
+    }
+
+    music.addEventListener('loadedmetadata', applySavedTime, { once: true });
+  }
 
   function updateSoundToggleButtons() {
     const buttons = document.querySelectorAll('.sound-toggle-btn');
@@ -55,6 +100,7 @@
     backgroundMusic.preload = 'auto';
     backgroundMusic.loop = true;
     backgroundMusic.volume = 0.2;
+    backgroundMusic.addEventListener('timeupdate', saveMusicTime);
     return backgroundMusic;
   }
 
@@ -67,7 +113,7 @@
       startBackgroundMusic();
     };
 
-    ['click', 'touchstart', 'keydown'].forEach((eventName) => {
+    ['pointerdown', 'click', 'touchstart', 'keydown'].forEach((eventName) => {
       document.addEventListener(eventName, retry, { once: true, passive: true });
     });
   }
@@ -75,8 +121,19 @@
   function startBackgroundMusic() {
     if (isMusicMuted) return;
     const music = getBackgroundMusic();
+    if (!hasRestoredMusicTime) {
+      restoreMusicTimeIfNeeded();
+    }
+    if (!music.paused && !music.ended) return;
+    music.muted = false;
     music.play().catch(() => {
-      armMusicRetryOnInteraction();
+      // Some browsers allow muted autoplay when normal autoplay is blocked.
+      music.muted = true;
+      music.play().then(() => {
+        music.muted = false;
+      }).catch(() => {
+        armMusicRetryOnInteraction();
+      });
     });
   }
 
@@ -140,15 +197,49 @@
   }
 
   function attachUiClickHandlers() {
-    document.addEventListener('click', (event) => {
+    const maybeUnlockMusic = () => {
+      if (!isMusicMuted && (!backgroundMusic || backgroundMusic.paused)) {
+        startBackgroundMusic();
+      }
+    };
+
+    const handleInteraction = (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
 
-      const clickable = target.closest('button, summary, .game-tab, .mode-card, .quiz-answer-btn, .titre_header, .lang-btn');
+      maybeUnlockMusic();
+
+      const internalLink = target.closest('a[href]');
+      const href = internalLink?.getAttribute('href');
+      if (href && !href.startsWith('http')) {
+        saveMusicTime();
+      }
+
+      const clickable = target.closest('button, summary, .game-tab, .mode-card, .quiz-answer-btn, .titre_header, .lang-btn, .logo-text, .navbar a');
       if (!clickable) return;
 
+      const now = Date.now();
+      if (now - lastUiSoundAt < 110) return;
+      lastUiSoundAt = now;
       playUiClickSound();
-    });
+    };
+
+    const handleClick = (event) => {
+      // Pointer clicks already handled by pointerdown; keep click for keyboard activation only.
+      if (event.detail > 0) return;
+      handleInteraction(event);
+    };
+
+    const handlePointerDown = (event) => {
+      const now = Date.now();
+      if (now - lastPointerSoundAt < 85) return;
+      lastPointerSoundAt = now;
+      handleInteraction(event);
+    };
+
+    // Use pointerdown so navbar link sounds can be heard before navigation unloads the page.
+    document.addEventListener('pointerdown', handlePointerDown, { passive: true });
+    document.addEventListener('click', handleClick);
   }
 
   function attachSoundToggleHandlers() {
@@ -179,15 +270,28 @@
   globalThis.toggleMusicMute = toggleMusicMuted;
   globalThis.isMusicMuted = () => isMusicMuted;
 
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      saveMusicTime();
+    }
+  });
+
+  globalThis.addEventListener('pagehide', saveMusicTime);
+  globalThis.addEventListener('beforeunload', saveMusicTime);
+  globalThis.addEventListener('pageshow', startBackgroundMusic);
+  globalThis.addEventListener('focus', startBackgroundMusic);
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', attachUiClickHandlers, { once: true });
     document.addEventListener('DOMContentLoaded', attachSoundToggleHandlers, { once: true });
     document.addEventListener('DOMContentLoaded', attachMusicToggleHandlers, { once: true });
+    document.addEventListener('DOMContentLoaded', restoreMusicTimeIfNeeded, { once: true });
     document.addEventListener('DOMContentLoaded', startBackgroundMusic, { once: true });
   } else {
     attachUiClickHandlers();
     attachSoundToggleHandlers();
     attachMusicToggleHandlers();
+    restoreMusicTimeIfNeeded();
     startBackgroundMusic();
   }
 })();

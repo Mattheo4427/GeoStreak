@@ -3,111 +3,51 @@
   <head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="img/globe-modified.png">
-    <title>GeoStreak - Jeux de geographie gratuits | Cartes, drapeaux et quiz</title>
-    <meta id="meta-description" name="description" content="GeoStreak est une plateforme gratuite de jeux de geographie avec quiz, cartes et drapeaux. Apprends et teste tes connaissances.">
+    <link rel="icon" href="../img/globe-modified.png">
+    <title>Regions Quiz - Geography Game for French Regions | GeoStreak</title>
+    <meta id="meta-description" name="description" content="Play a regions quiz focused on France and improve regional geography quickly. This geography game combines clear questions and fast feedback for efficient learning.">
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="uJvl8wS5hWnO7--pnV5jM-XzckrS4ZwQqaSFNgwjIkE">
-    <meta id="meta-og-title" property="og:title" content="GeoStreak - Jeux de geographie gratuits | Cartes, drapeaux et quiz">
-    <meta id="meta-og-description" property="og:description" content="GeoStreak est une plateforme gratuite de jeux de geographie avec quiz, cartes et drapeaux. Apprends et teste tes connaissances.">
+    <meta id="meta-og-title" property="og:title" content="Regions Quiz - Geography Game for French Regions | GeoStreak">
+    <meta id="meta-og-description" property="og:description" content="Play a regions quiz focused on France and improve regional geography quickly. This geography game combines clear questions and fast feedback for efficient learning.">
     <meta property="og:type" content="website">
-    <link rel="canonical" href="https://geo-streak.vercel.app/">
+    <link rel="canonical" href="https://geo-streak.vercel.app/pages/regions-quiz">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleTW.css">
+    <link rel="stylesheet" href="../css/styleTW.css">
     <meta name="google-adsense-account" content="ca-pub-7436966726001934">
     <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
   </head>
-  <body class="home-hub">
+  <body data-disable-dynamic-seo="true" data-initial-game-tab="regionGame">
     <header class="navbar">
       <div class="flex-1">
-        <a href="index.html"><img src="img/globe-modified.png" alt="Globe logo"></a>
-        <a href="index.html" class="logo-text" data-i18n="brand.name">GeoStreak</a>
+        <a href="../index.html"><img src="../img/globe-modified.png" alt="Globe logo"></a>
+        <a href="../index.html" class="logo-text" data-i18n="brand.name">GeoStreak</a>
       </div>
       <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
-          <li><a class="titre_header active" href="index.html" data-i18n="nav.home">Home</a></li>
+          <li><a class="titre_header" href="../index.html" data-i18n="nav.home">Home</a></li>
           <li class="nav-group-label" data-i18n="nav.worldGroup">World</li>
-          <li><a class="titre_header" href="pages/flag-quiz.html" data-i18n="nav.flagQuiz">Flag Quiz</a></li>
-          <li><a class="titre_header" href="pages/map-quiz.html" data-i18n="nav.mapQuiz">Map Quiz</a></li>
+          <li><a class="titre_header" href="flag-quiz.html" data-i18n="nav.flagQuiz">Flag Quiz</a></li>
+          <li><a class="titre_header" href="map-quiz.html" data-i18n="nav.mapQuiz">Map Quiz</a></li>
           <li class="nav-group-label" data-i18n="nav.franceGroup">France</li>
-          <li><a class="titre_header" href="pages/france-departments.html" data-i18n="nav.france">Departments Quiz</a></li>
-          <li><a class="titre_header" href="pages/department-map-quiz.html" data-i18n="nav.deptMapQuiz">Department Map Game</a></li>
-          <li><a class="titre_header" href="pages/regions-quiz.html" data-i18n="nav.regions">Regions Quiz</a></li>
+          <li><a class="titre_header" href="france-departments.html" data-i18n="nav.france">Departments Quiz</a></li>
+          <li><a class="titre_header" href="department-map-quiz.html" data-i18n="nav.deptMapQuiz">Department Map Game</a></li>
+          <li><a class="titre_header active" href="regions-quiz.html" data-i18n="nav.regions">Regions Quiz</a></li>
         </ul>
         <div class="lang-switcher">
           <button class="sound-toggle-btn" id="soundToggleBtn" type="button" aria-label="Mute sound" title="Mute sound">🔊</button>
           <button class="music-toggle-btn" id="musicToggleBtn" type="button" aria-label="Mute music" title="Mute music">🎵</button>
           <button class="lang-btn" data-lang="fr" title="Français">
-            <img src="flags/fr.png" alt="FR">
+            <img src="../flags/fr.png" alt="FR">
           </button>
           <button class="lang-btn active" data-lang="en" title="English">
-            <img src="flags/gb.png" alt="EN">
+            <img src="../flags/gb.png" alt="EN">
           </button>
         </div>
       </div>
     </header>
-    <section class="hero-section" aria-label="GeoStreak Hero">
-      <div class="hero-inner">
-        <h1 class="hero-title" data-i18n="brand.heroTitle">GeoStreak - Jeux de geographie et quiz</h1>
-        <p class="hero-tagline" data-i18n="brand.heroTagline">Apprends la geographie avec des quiz et des jeux interactifs</p>
-        <p class="hero-intro" data-i18n="brand.heroIntro">Choisis un mode de jeu et commence a apprendre la geographie</p>
-        <button class="hero-cta" id="heroPlayButton" data-i18n="brand.heroCta">Play a random game</button>
-      </div>
-    </section>
-
-    <section class="mode-cards-section home-modes-row" aria-label="Game modes">
-      <h2 class="section-title" data-i18n="home.modesTitle">Modes de jeu</h2>
-      <div class="mode-group">
-        <h3 class="mode-group-title" data-i18n="pageIntro.worldGamesLabel">World Games</h3>
-        <div class="mode-cards-grid world-modes-grid">
-          <a class="mode-card" href="pages/flag-quiz.html">
-            <span class="mode-icon" aria-hidden="true">🏳️</span>
-            <h3 data-i18n="home.modeFlagTitle">Quiz drapeaux</h3>
-            <p data-i18n="home.modeFlagDesc">Identifie les pays grace a leurs drapeaux et entraine ta memoire avec un quiz drapeaux dynamique.</p>
-            <span class="mode-keywords" data-i18n="home.modeFlagKeywords">Mots-cles: jeu de geographie, quiz drapeaux, drapeaux du monde</span>
-          </a>
-          <a class="mode-card" href="pages/map-quiz.html">
-            <span class="mode-icon" aria-hidden="true">🗺️</span>
-            <h3 data-i18n="home.modeMapTitle">Quiz carte</h3>
-            <p data-i18n="home.modeMapDesc">Clique sur le bon pays sur la carte du monde et progresse avec des manches interactives.</p>
-            <span class="mode-keywords" data-i18n="home.modeMapKeywords">Mots-cles: quiz carte, map quiz, geography game</span>
-          </a>
-        </div>
-      </div>
-      <div class="mode-group">
-        <h3 class="mode-group-title" data-i18n="pageIntro.franceGamesLabel">France Games</h3>
-        <div class="mode-cards-grid france-modes-grid">
-          <a class="mode-card" href="pages/france-departments.html">
-            <span class="mode-icon" aria-hidden="true">📍</span>
-            <h3 data-i18n="home.modeDeptTitle">Departements francais</h3>
-            <p data-i18n="home.modeDeptDesc">Travaille les departements francais avec les noms et numeros, en mode national ou regional.</p>
-            <span class="mode-keywords" data-i18n="home.modeDeptKeywords">Mots-cles: jeu de geographie, quiz departements, France</span>
-          </a>
-          <a class="mode-card" href="pages/department-map-quiz.html">
-            <span class="mode-icon" aria-hidden="true">🧱</span>
-            <h3 data-i18n="home.modeDeptMapTitle">Department Map Game</h3>
-            <p data-i18n="home.modeDeptMapDesc">Clique directement sur les bons departements sur la carte de France et progresse en visualisation geographique.</p>
-            <span class="mode-keywords" data-i18n="home.modeDeptMapKeywords">Mots-cles: carte departements, quiz carte France, jeu geographie</span>
-          </a>
-          <a class="mode-card" href="pages/regions-quiz.html">
-            <span class="mode-icon" aria-hidden="true">🧭</span>
-            <h3 data-i18n="home.modeRegionTitle">Regions</h3>
-            <p data-i18n="home.modeRegionDesc">Associe chaque departement a la bonne region et renforce ta connaissance du territoire francais.</p>
-            <span class="mode-keywords" data-i18n="home.modeRegionKeywords">Mots-cles: quiz regions, geographie France, apprentissage interactif</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <div class="game-tabs">
-      <button class="game-tab active" data-target="flagGame" data-i18n="tabs.flagGame">Jeu des Drapeaux</button>
-      <button class="game-tab" data-target="mapGame" data-i18n="tabs.mapGame">Jeu de la Carte</button>
-      <button class="game-tab" data-target="deptGame" data-i18n="tabs.deptGame">Jeu des Départements</button>
-      <button class="game-tab" data-target="deptMapGame" data-i18n="tabs.deptMapGame">Carte des Départements</button>
-      <button class="game-tab" data-target="regionGame" data-i18n="tabs.regionGame">Jeu des Régions</button>
-    </div>
     <div id="flagGame" class="game-section active">
       <div class="game-header">
         <h1 class="titre_principal" style="margin-top: 2vh;" data-i18n="tabs.flagGame">Jeu des Drapeaux</h1>
@@ -1421,6 +1361,33 @@
     </div>
     <!-- Region Game -->
 
+    <section class="seo-content" aria-label="Regions quiz page intro">
+      <div class="seo-content-inner intro-enhanced">
+        <h1 data-i18n="pageIntro.regionTitle">Regions Quiz: Master French Regions</h1>
+        <p data-i18n="pageIntro.regionText">This regions quiz trains your understanding of French administrative regions. It is a focused geography game for linking departments to the correct region.</p>
+        <div class="params-block">
+          <h2 data-i18n="pageIntro.paramsTitle">How to use each parameter</h2>
+          <div class="params-grid">
+            <article class="param-card">
+              <h3 data-i18n="pageIntro.regionParamAnswersTitle">Answers</h3>
+              <p data-i18n="pageIntro.regionParamAnswersText">Set 2, 4, or 8 choices. Higher values make each region question more demanding.</p>
+            </article>
+          </div>
+        </div>
+        <h2 data-i18n="pageIntro.tryOtherGamesTitle">Try Other Games</h2>
+        <p class="other-games-label" data-i18n="pageIntro.worldGamesLabel">World Games</p>
+        <p class="intro-actions">
+          <a class="playButton" href="flag-quiz.html" data-i18n="pageIntro.regionFlagCta">Try Flag Quiz</a>
+          <a class="playButton" href="map-quiz.html" data-i18n="pageIntro.frDeptMapCta2">Try Map Quiz</a>
+        </p>
+        <p class="other-games-label" data-i18n="pageIntro.franceGamesLabel">France Games</p>
+        <p class="intro-actions">
+          <a class="playButton" href="france-departments.html" data-i18n="pageIntro.regionFranceCta">Try Departments Quiz</a>
+          <a class="playButton" href="department-map-quiz.html" data-i18n="pageIntro.frDeptMapCta">Try Department Map Game</a>
+        </p>
+      </div>
+    </section>
+
     <section class="seo-content qa-section" aria-label="GeoStreak details">
       <div class="seo-content-inner">
         <h2 class="qa-main-title" data-i18n="pageIntro.mainQuestionsTitle">General Infos</h2>
@@ -1430,8 +1397,8 @@
             <p data-i18n="home.aboutText">GeoStreak est une plateforme de geographie qui reunit plusieurs formats de quiz dans une interface simple et rapide. Tu peux apprendre les pays, les cartes, les drapeaux et les territoires francais en jouant.</p>
           </article>
           <article class="qa-card">
-            <h3 data-i18n="home.gamesTitle">Comment se deroule une manche ?</h3>
-            <p data-i18n="home.gamesText">Chaque manche pose une question claire, affiche un retour immediat vrai/faux, met a jour le score et permet de rejouer vite pour progresser.</p>
+            <h3 data-i18n="home.gamesTitle">Quels jeux de geographie sont disponibles ?</h3>
+            <p data-i18n="home.gamesText">Tu peux jouer a un quiz drapeaux, un quiz carte, un mode departements et un mode regions. Chaque jeu de geographie propose des questions courtes, un retour immediat et une progression naturelle.</p>
           </article>
           <article class="qa-card">
             <h3 data-i18n="home.whyTitle">Pourquoi utiliser GeoStreak ?</h3>
@@ -1444,50 +1411,31 @@
     <footer class="seo-content" aria-label="Site footer links">
       <div class="seo-content-inner">
         <p>
-          <a href="pages/privacy-policy.html" data-i18n="legal.privacyTitle">Privacy Policy</a> |
-          <a href="pages/terms.html" data-i18n="legal.termsTitle">Terms of Service</a> |
-          <a href="pages/contact.html" data-i18n="legal.contactTitle">Contact</a>
+          <a href="privacy-policy.html" data-i18n="legal.privacyTitle">Privacy Policy</a> |
+          <a href="terms.html" data-i18n="legal.termsTitle">Terms of Service</a> |
+          <a href="contact.html" data-i18n="legal.contactTitle">Contact</a>
         </p>
       </div>
     </footer>
 
-    <script src="json/local_bundle.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/audio.js"></script>
-    <script src="js/zoomPan.js"></script>
-    <script src="js/controls.js"></script>
-    <script src="js/flagGame.js"></script>
-    <script src="js/mapGame.js"></script>
-    <script src="js/deptGame.js"></script>
-    <script src="json/map_fr_dep_svg.js"></script>
-    <script src="js/deptMapGame.js"></script>
-    <script src="js/regionGame.js"></script>
-    <script src="js/init.js"></script>
+    <script src="../json/local_bundle.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/audio.js"></script>
+    <script src="../js/zoomPan.js"></script>
+    <script src="../js/controls.js"></script>
+    <script src="../js/flagGame.js"></script>
+    <script src="../js/mapGame.js"></script>
+    <script src="../js/deptGame.js"></script>
+    <script src="../json/map_fr_dep_svg.js"></script>
+    <script src="../js/deptMapGame.js"></script>
+    <script src="../js/regionGame.js"></script>
+    <script src="../js/init.js"></script>
     <script>
-      document.querySelectorAll('.game-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('active'));
-          document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
-          tab.classList.add('active');
-          document.getElementById(tab.dataset.target).classList.add('active');
-        });
+      const initialTab = document.body.dataset.initialGameTab || 'flagGame';
+      document.querySelectorAll('.game-section').forEach(section => {
+        section.classList.toggle('active', section.id === initialTab);
       });
-
-      const heroPlayButton = document.getElementById('heroPlayButton');
-      if (heroPlayButton) {
-        heroPlayButton.addEventListener('click', () => {
-          const randomPages = [
-            'pages/flag-quiz.html',
-            'pages/map-quiz.html',
-            'pages/france-departments.html',
-            'pages/department-map-quiz.html',
-            'pages/regions-quiz.html'
-          ];
-          const next = randomPages[Math.floor(Math.random() * randomPages.length)];
-          globalThis.location.href = next;
-        });
-      }
     </script>
   </body>
 </html> 

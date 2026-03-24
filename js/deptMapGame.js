@@ -4,7 +4,8 @@ const deptMapState = {
   paths: [],
   clickHandler: null,
   pendingTimer: null,
-  svgLoaded: false
+  svgLoaded: false,
+  shouldResetScoreOnStart: false
 };
 
 function normalizeDeptId(id) {
@@ -339,17 +340,22 @@ function endDeptMapGame(clickedPath, correctPath) {
   const scoreInline = document.getElementById('scoreDeptMapGame');
   if (scoreInline) {
     scoreInline.style.display = 'block';
-    scoreInline.textContent = (texts.score || 'Score') + ' : 0';
+    scoreInline.textContent = (texts.score || 'Score') + ' : ' + scoreDeptMapGame;
   }
 
   const mapContainer = document.getElementById('dept-svg-container');
   mapContainer?._resetZoom?.();
 
-  scoreDeptMapGame = 0;
+  deptMapState.shouldResetScoreOnStart = true;
 }
 
 async function deptMapGame() {
   try {
+    if (deptMapState.shouldResetScoreOnStart) {
+      scoreDeptMapGame = 0;
+      deptMapState.shouldResetScoreOnStart = false;
+    }
+
     if (departements.length === 0) await loadDepartements();
 
     clearDeptMapTimer();

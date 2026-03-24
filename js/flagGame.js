@@ -75,7 +75,8 @@ async function flagGame() {
     });
 
     try {
-      const images = await Promise.all(codes.map(code => preload('flags/' + code + '.png')));
+      const flagsBasePath = globalThis.location.pathname.includes('/pages/') ? '../flags/' : 'flags/';
+      const images = await Promise.all(codes.map(code => preload(flagsBasePath + code + '.png')));
       images.forEach((img, i) => {
         document.getElementById('image' + (i + 1)).src = img.src;
       });

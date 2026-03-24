@@ -39,6 +39,8 @@ function setMetaContent(id, content) {
 }
 
 function applySeoMeta() {
+  if (document.body?.dataset.disableDynamicSeo === 'true') return;
+
   if (!texts?.seo) return;
 
   if (texts.seo.title) {

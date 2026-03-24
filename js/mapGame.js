@@ -1,5 +1,14 @@
+/* global scoreMapGame */
+
+let shouldResetMapScoreOnStart = false;
+
 async function mapGame() {
   try {
+    if (shouldResetMapScoreOnStart) {
+      scoreMapGame = 0;
+      shouldResetMapScoreOnStart = false;
+    }
+
     const isValidLabel = (value) => {
       const text = String(value ?? '').trim().toLowerCase();
       return text !== '' && text !== 'null' && text !== 'undefined';
@@ -99,7 +108,7 @@ async function mapGame() {
       let id;
 
       if (event.target.tagName.toLowerCase() === 'div') {
-        const pathId = event.target.getAttribute('data-path-id');
+        const pathId = event.target.dataset.pathId;
         paths.forEach(p => {
           if (pathId.toLowerCase() === p.getAttribute('id').toLowerCase()) {
             element = p;
@@ -223,11 +232,11 @@ function endMapGame(bad, answer) {
   const scoreMain = document.getElementById('scoreMapGame');
   if (scoreMain) {
     scoreMain.style.display = 'block';
-    scoreMain.textContent = (texts.score || 'Score') + ' : 0';
+    scoreMain.textContent = (texts.score || 'Score') + ' : ' + scoreMapGame;
   }
 
   const container = document.getElementById('svg-container');
   if (container._resetZoom) container._resetZoom();
 
-  scoreMapGame = 0;
+  shouldResetMapScoreOnStart = true;
 }
