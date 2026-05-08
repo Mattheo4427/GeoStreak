@@ -1,0 +1,29 @@
+{
+  "name": "geo-streak",
+  "version": "1.0.0",
+  "description": "GeoStreak is an interactive geography learning platform that makes exploring the world fun and educational.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mattheo4427/GeoStreak.git"
+  },
+  "keywords": [
+    "geography",
+    "education",
+    "quiz",
+    "game",
+    "learning"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mattheo4427/GeoStreak/issues"
+  },
+  "homepage": "https://github.com/Mattheo4427/GeoStreak#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
